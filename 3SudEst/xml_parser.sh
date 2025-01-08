@@ -8,7 +8,12 @@ read_xml() {
     	echo "Valoarea elementului <$element> este:"
         grep -oP "(?<=<$element>).*?(?=</$element>)" "$file" 
     else
-        echo "Eroare: Elementul <$element> nu exista in fisierul $file."
+    
+    	if grep -q "<$element>" "$file"; then
+    		echo "Elementul <$element> este parinte."
+    	else
+        	echo "Eroare: Elementul <$element> nu exista in fisierul $file."
+        fi
     fi
 }
 
@@ -21,7 +26,6 @@ write_xml() {
     
     local root_tag
     root_tag=$(head -n 1 "$file" | sed 's/[<>]//g')
-    
     if grep -q "</$root_tag>" "$file"; then
         if grep -q "<$element>.*</$element>" "$file"; then
             sed -i "s|<$element>.*</$element>|<$element>$value</$element>|" "$file"
