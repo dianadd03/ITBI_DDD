@@ -25,8 +25,10 @@ write_xml() {
     if grep -q "</$root_tag>" "$file"; then
         if grep -q "<$element>.*</$element>" "$file"; then
             sed -i "s|<$element>.*</$element>|<$element>$value</$element>|" "$file"
+            echo "Elementul <$element> a fost actualizat"
         else
             sed -i "/<\/$root_tag>/i <$element>$value</$element>" "$file"
+        echo "Elementul <$element> a fost adaugat"
         fi
     else
         echo "Eroare: Fisierul XML nu contine un element radacina valid"
@@ -50,7 +52,6 @@ case $option in
         read -p "Introduceti numele elementului ce trebuie scris: " element
         read -p "Introduceti valoarea elementului: " value
         write_xml "$file" "$element" "$value"
-        echo "Elementul <$element> a fost adaugat/actualizat"
         ;;
     *)
         echo "Optiune nevalida"
